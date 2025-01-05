@@ -16,9 +16,10 @@ import {
 interface TaskDetailsDialogProps {
   open: boolean;
   onClose: () => void;
-  task: Task | null;
-  onDelete: (taskId: string) => void;
-  onStatusChange: (taskId: string, isCompleted: boolean) => void;
+  task: Task;
+  onDelete: () => void;
+
+  onStatusChange: (isCompleted: boolean) => void;
   taskCompletionStatus: boolean;
   isLoading?: boolean;
   error?: boolean;
@@ -33,9 +34,8 @@ export const TaskDetailsDialog = ({
   taskCompletionStatus,
   isLoading,
   error
-}: TaskDetailsDialogProps) => 
-{
-const themes = useTheme()
+}: TaskDetailsDialogProps) => {
+  const themes = useTheme();
 
   if (isLoading) {
     return (
@@ -59,8 +59,6 @@ const themes = useTheme()
     );
   }
 
-  if (!task) return null;
-
   return (
     <Dialog
       open={open}
@@ -73,7 +71,7 @@ const themes = useTheme()
           height: "500px",
           borderRadius: 2,
           p: 2,
-          bgcolor:themes.palette.grey["400"]
+          bgcolor: themes.palette.grey["400"]
         },
       }}
     >
@@ -83,7 +81,6 @@ const themes = useTheme()
           textAlign: "center",
           mb: 2,
           textDecoration: taskCompletionStatus ? "line-through" : "none",
-         
         }}
       >
         {task.title}
@@ -95,7 +92,6 @@ const themes = useTheme()
           flexDirection: "column",
           gap: 2,
           overflowY: "auto",
-          
         }}
       >
         <Typography variant="body2">
@@ -124,11 +120,10 @@ const themes = useTheme()
 
         <Box>
           <Checkbox
-            checked={taskCompletionStatus}
-            onChange={(e) => onStatusChange(task._id, e.target.checked)}
-           
+            checked={task.is_completed}
+            onChange={(e) => onStatusChange(e.target.checked)}
           />
-          {taskCompletionStatus ? "Mark as Uncompleted" : "Mark as Completed"}
+          {task.is_completed ? "Mark as Uncompleted" : "Mark as Completed"}
         </Box>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center" }}>
@@ -141,7 +136,6 @@ const themes = useTheme()
             fontWeight: 500,
             fontSize: "14px",
             color: themes.palette.grey["500"],
-
             "&:hover": {
               bgcolor: "primary",
               opacity: 0.9,
@@ -151,7 +145,7 @@ const themes = useTheme()
           Close
         </Button>
         <Button
-          onClick={() => onDelete(task._id)}
+          onClick={onDelete}
           variant="contained"
           color="secondary"
           sx={{

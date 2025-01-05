@@ -1,45 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Tabs,
-  Tab,
-  useMediaQuery,
-  CircularProgress,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
-import { addDays } from "date-fns";
 import { Task } from "@todolist/core/models/task.model";
 import { CategoryType } from "@todolist/core/models/category.models";
-import { CustomTabPanel } from "@todolist/components/common/CustomTabPanel";
-import { TaskDetailsDialog } from "@todolist/components/dialogs/TaskDetailsDialog";
-import { DeleteConfirmationDialog } from "@todolist/components/common/DeleteConfirmationDialog";
 import { useTasks } from "@todolist/hooks/features/tasks/useTasks";
-import { TabContent } from "@todolist/components/features/tabs/TabContent";
+import { LoadingState } from "@todolist/components/common/LoadingState";
+import { ErrorState } from "@todolist/components/common/ErrorState";
+import { TaskTabs } from "@todolist/components/features/tabs/TaskTabs";
+import { TaskDialogs } from "@todolist/components/dialogs/TaskDialogs";
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+export interface HomeViewProps {
+  initialTabValue?: number;
+}
+
+interface DialogState {
+  taskDetails: {
+    open: boolean;
+    selectedTask: string;
+    completionStatus: boolean;
+  };
+  deleteConfirmation: {
+    open: boolean;
+    taskToDelete: string | null;
   };
 }
 
-export default function Home() {
-  const [tabValue, setTabValue] = useState(0);
-  const [open, setOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<string>("");
-  const [taskCompletionStatus, setTaskCompletionStatus] =
-    useState<boolean>(false);
+export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
+  const [tabValue, setTabValue] = useState(initialTabValue);
+  const [dialogState, setDialogState] = useState<DialogState>({
+    taskDetails: { open: false, selectedTask: "", completionStatus: false },
+    deleteConfirmation: { open: false, taskToDelete: null },
+  });
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("All");
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
 
   const theme = useTheme();
   const router = useRouter();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const {
     tasks,
@@ -52,75 +50,54 @@ export default function Home() {
     handleCheckboxChange,
     handleDeleteTask,
     getFilteredTasks,
-  } = useTasks(selectedTask);
+  } = useTasks(dialogState.taskDetails.selectedTask);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
+  const handleTaskClick = (task: Task) => {
+    setDialogState((prev) => ({
+      ...prev,
+      taskDetails: {
+        open: true,
+        selectedTask: task._id,
+        completionStatus: task.is_completed,
+      },
+    }));
   };
 
-  const handleClickOpen = (task: Task) => {
-    setSelectedTask(task._id);
-    setTaskCompletionStatus(task.is_completed);
-    setOpen(true);
+  const handleDialogClose = () => {
+    setDialogState((prev) => ({
+      ...prev,
+      taskDetails: { open: false, selectedTask: "", completionStatus: false },
+    }));
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedTask("");
+  const handleNewTaskClick = () => router.push("/CreateTask");
+
+  const handleDeleteDialogOpen = (taskId: string) => {
+    setDialogState((prev) => ({
+      ...prev,
+      deleteConfirmation: { open: true, taskToDelete: taskId },
+    }));
   };
 
-  const handleNewTaskClick = () => {
-    router.push("/CreateTask");
-  };
-
-  const openDeleteConfirmationDialog = (taskId: string) => {
-    setTaskToDelete(taskId);
-    setDeleteConfirmationOpen(true);
-  };
-
-  const closeDeleteConfirmationDialog = () => {
-    setDeleteConfirmationOpen(false);
-    setTaskToDelete(null);
+  const handleDeleteDialogClose = () => {
+    setDialogState((prev) => ({
+      ...prev,
+      deleteConfirmation: { open: false, taskToDelete: null },
+    }));
   };
 
   const handleDeleteConfirm = () => {
+    const { taskToDelete } = dialogState.deleteConfirmation;
     if (!taskToDelete) return;
+
     handleDeleteTask(taskToDelete, () => {
-      setDeleteConfirmationOpen(false);
-      handleClose();
-      setTaskToDelete(null);
+      handleDeleteDialogClose();
+      handleDialogClose();
     });
   };
 
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Typography color="error">Failed to load tasks</Typography>
-      </Box>
-    );
-  }
+  if (isLoading) return <LoadingState />;
+  if (isError) return <ErrorState message="Failed to load tasks" />;
 
   return (
     <>
@@ -133,107 +110,33 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        <Box
-          sx={{
-            borderBottom: 1,
-            borderColor: "divider",
-            height: "70px",
-            display: "flex",
-            width: "100%",
-            backgroundColor: theme.palette.grey["400"],
-          }}
-        >
-          <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            aria-label="task tabs"
-            variant={isMobile ? "fullWidth" : "standard"}
-            sx={{
-              pt: 0,
-              width: isMobile ? "100%" : "fit-content",
-              alignSelf: "end",
-            }}
-            TabIndicatorProps={{
-              style: { backgroundColor: theme.palette.grey["300"] },
-            }}
-          >
-            <Tab
-              label="Today's Task"
-              {...a11yProps(0)}
-              sx={{
-                fontWeight: 700,
-                color: theme.palette.text.primary,
-                "&.Mui-selected": { color: theme.palette.text.primary },
-              }}
-            />
-            <Tab
-              label="Tomorrow's Task"
-              {...a11yProps(1)}
-              sx={{
-                fontWeight: 700,
-                color: theme.palette.text.primary,
-                "&.Mui-selected": { color: theme.palette.text.primary },
-              }}
-            />
-          </Tabs>
-        </Box>
-        <Box sx={{ backgroundColor: theme.palette.grey["100"], py: 2 }}>
-          <CustomTabPanel value={tabValue} index={0}>
-            <TabContent
-              title="Today's Task"
-              date={new Date()}
-              tasks={tasks}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              onNewTaskClick={handleNewTaskClick}
-              filteredTasks={getFilteredTasks(
-                tasks,
-                selectedCategory,
-                new Date()
-              )}
-              onTaskClick={handleClickOpen}
-              onCheckboxChange={handleCheckboxChange}
-            />
-          </CustomTabPanel>
-          <CustomTabPanel value={tabValue} index={1}>
-            <TabContent
-              title="Tomorrow's Task"
-              date={addDays(new Date(), 1)}
-              tasks={tasks}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              onNewTaskClick={handleNewTaskClick}
-              filteredTasks={getFilteredTasks(
-                tasks,
-                selectedCategory,
-                addDays(new Date(), 1)
-              )}
-              onTaskClick={handleClickOpen}
-              onCheckboxChange={handleCheckboxChange}
-            />
-          </CustomTabPanel>
-        </Box>
+        <TaskTabs
+          tabValue={tabValue}
+          onTabChange={(newValue: number) => setTabValue(newValue)}
+          tasks={tasks}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          onNewTaskClick={handleNewTaskClick}
+          getFilteredTasks={getFilteredTasks}
+          onTaskClick={handleTaskClick}
+          onCheckboxChange={handleCheckboxChange}
+        />
       </Box>
 
-      {taskDetailsData && (
-        <TaskDetailsDialog
-          open={open}
-          onClose={handleClose}
-          task={taskDetailsData}
-          onDelete={openDeleteConfirmationDialog}
-          onStatusChange={handleCheckboxChange}
-          taskCompletionStatus={taskCompletionStatus}
-          isLoading={taskDetailsLoading}
-          error={taskDetailsError}
-        />
-      )}
-
-      <DeleteConfirmationDialog
-        open={deleteConfirmationOpen}
-        onClose={closeDeleteConfirmationDialog}
-        onConfirm={handleDeleteConfirm}
+      <TaskDialogs
+        dialogState={dialogState}
+        taskDetailsData={taskDetailsData}
+        taskDetailsLoading={taskDetailsLoading}
+        taskDetailsError={taskDetailsError}
         isDeleting={isDeleting}
+        onClose={handleDialogClose}
+        onDelete={handleDeleteDialogOpen}
+        onDeleteConfirm={handleDeleteConfirm}
+        onDeleteDialogClose={handleDeleteDialogClose}
+        onStatusChange={handleCheckboxChange}
       />
     </>
   );
-}
+};
+
+export default HomeView;
