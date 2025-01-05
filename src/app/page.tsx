@@ -12,7 +12,6 @@ import {
   DialogContent,
   useMediaQuery,
   CircularProgress,
-  styled,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CategoryChips } from "@todolist/components/common/categoryChips";
@@ -31,10 +30,9 @@ import { toast } from "react-toastify";
 import { CategoryType } from "@todolist/core/models/category.models";
 import { CustomTabPanel } from "@todolist/components/common/CustomTabPanel";
 import { TabHeader } from "@todolist/components/common/TabHeader";
-import { TaskCard } from "@todolist/components/common/TaskCards";
 import { TaskDetailsDialog } from "@todolist/components/dialogs/TaskDetailsDialog";
 import { DeleteConfirmationDialog } from "@todolist/components/common/DeleteConfirmationDialog";
-import DarkModeSwitch from "@todolist/components/common/DarkModeSwitch";
+import { TaskCard } from "@todolist/components/common/taskCards";
 
 function a11yProps(index: number) {
   return {
@@ -86,7 +84,11 @@ export default function Home() {
       { id: taskId, isCompleted },
       {
         onSuccess: () => {
-          toast.success("task status successfully");
+          if (isCompleted) {
+            toast.success("Task is Done");
+          } else {
+            toast.info("Task is not done");
+          }
 
           if (taskId === selectedTask) {
             setTaskCompletionStatus(isCompleted);

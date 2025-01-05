@@ -46,7 +46,7 @@ export const TaskCard: FC<ITaskCard> = ({
     dateLabel = format(createdDate, "MMM dd, yyyy");
   }
 
-  const formatTime = (date: Date) => format(date, "hh a");
+  const formatTime = (date: Date) => format(date, "p");
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
