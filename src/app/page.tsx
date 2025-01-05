@@ -44,6 +44,8 @@ import { CategoryType } from "@todolist/core/models/category.models";
 import { CustomTabPanel } from "@todolist/components/common/CustomTabPanel";
 import { TabHeader } from "@todolist/components/common/TabHeader";
 import { TaskCard } from "@todolist/components/common/TaskCards";
+import { TaskDetailsDialog } from "@todolist/components/dialogs/TaskDetailsDialog";
+import { DeleteConfirmationDialog } from "@todolist/components/common/DeleteConfirmationDialog";
 
 function a11yProps(index: number) {
   return {
@@ -343,141 +345,24 @@ export default function Home() {
       </Box>
 
       {taskDetailsData && (
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          maxWidth="sm"
-          fullWidth
-          PaperProps={{
-            sx: {
-              width: "600px",
-              height: "500px",
-              borderRadius: 2,
-              p: 2,
-            },
-          }}
-        >
-          <DialogTitle
-            sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-              mb: 2,
-              textDecoration: taskCompletionStatus ? "line-through" : "none", // Add strikethrough to title if completed
-            }}
-          >
-            {taskDetailsData.title}
-          </DialogTitle>
-          <Divider variant="middle" />
-          <DialogContent
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              overflowY: "auto",
-            }}
-          >
-            <Typography variant="body2">
-              <strong>Description:</strong> {taskDetailsData.description}
-            </Typography>
-            <Typography variant="body2">
-              <strong>Start Date:</strong>{" "}
-              {taskDetailsData.start_date
-                ? new Date(taskDetailsData.start_date).toDateString()
-                : "N/A"}
-            </Typography>
-            <Typography variant="body2">
-              <strong>End Date:</strong>{" "}
-              {taskDetailsData.end_date
-                ? new Date(taskDetailsData.end_date).toDateString()
-                : "N/A"}
-            </Typography>
-            <Typography variant="body2">
-              <strong>Status:</strong>{" "}
-              {taskDetailsData.is_completed ? "Completed" : "Pending"}
-            </Typography>
-            <Typography variant="body2">
-              <strong>Created At:</strong>{" "}
-              {new Date(taskDetailsData.createdAt).toLocaleString()}
-            </Typography>
-
-            <Box>
-              <Checkbox
-                checked={taskCompletionStatus}
-                onChange={(e) =>
-                  handleCheckboxChange(taskDetailsData._id, e.target.checked)
-                }
-              />
-
-              {taskCompletionStatus
-                ? "Mark as Uncompleted"
-                : "Mark as Completed"}
-            </Box>
-          </DialogContent>
-          <DialogActions
-            sx={{
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              onClick={handleClose}
-              variant="contained"
-              color="primary"
-              sx={{
-                px: 3,
-                bgcolor: "#0760FB1A",
-                color: "#0760FB",
-                "&:hover": {
-                  bgcolor: "primary",
-                  opacity: 0.9,
-                },
-              }}
-            >
-              Close
-            </Button>
-            <Button
-              onClick={() => openDeleteConfirmationDialog(taskDetailsData._id)}
-              variant="contained"
-              color="secondary"
-              disabled={isDeleting}
-              sx={{
-                px: 3,
-                bgcolor: isDeleting ? "grey.300" : "#FB1A1A1A",
-                color: "#FB1A1A",
-                "&:hover": {
-                  bgcolor: "error",
-                  opacity: 0.9,
-                },
-              }}
-            >
-              Delete Task
-            </Button>
-          </DialogActions>
-        </Dialog>
+       <TaskDetailsDialog
+       open={open}
+       onClose={handleClose}
+       task={taskDetailsData}
+       onDelete={openDeleteConfirmationDialog}
+       onStatusChange={handleCheckboxChange}
+       taskCompletionStatus={taskCompletionStatus}
+       isLoading={taskDetailsLoading}
+       error={taskDetailsError}
+     />
       )}
       {/* Delete Confirmation Dialog */}
-      <Dialog
+      <DeleteConfirmationDialog
         open={deleteConfirmationOpen}
         onClose={closeDeleteConfirmationDialog}
-      >
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to delete this task?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDeleteConfirmationDialog} color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleDeleteTask}
-            color="error"
-            variant="contained"
-            disabled={isDeleting}
-            sx={{ bgcolor: "#FB1A1A1A", color: "#FB1A1A" }}
-          >
-            {isDeleting ? "Deleting..." : "Yes, Delete"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleDeleteTask}
+        isDeleting={isDeleting}
+      />
     </>
   );
 }
