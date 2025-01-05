@@ -3,9 +3,10 @@ import { Box, Divider, Typography, ButtonBase } from "@mui/material";
 import StyledBadge from "@todolist/styles/styledBadge";
 import { CategoryType } from "@todolist/core/models/category.models";
 import { getCategoryStats } from "@todolist/lib/categoryStats";
+import { Task } from "@todolist/core/models/task.model";
 
 export interface ICategoryChipsProps {
-  tasks: any[];
+  tasks: Task[];
   date: Date;
   selectedCategory: string;
   onCategoryChange: (category: CategoryType) => void;
@@ -26,7 +27,7 @@ export const CategoryChips = ({
         display: "flex",
         gap: 1,
         alignItems: "center",
-        flexWrap: "nowrap",
+        flexWrap: "wrap",
       }}
     >
       {stats.map((stat, index) => (
@@ -41,7 +42,7 @@ export const CategoryChips = ({
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 1,
-                pr: 2,
+                pr: 1,
                 borderRadius: 1,
                 bgcolor: "transparent",
               }}
@@ -76,7 +77,7 @@ export const CategoryChips = ({
             </Box>
           </ButtonBase>
           {index === 0 && (
-            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            <Divider orientation="vertical" flexItem sx={{mx:1}}  />
           )}
         </Fragment>
       ))}

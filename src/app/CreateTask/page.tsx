@@ -9,6 +9,7 @@ import {
   Button,
   IconButton,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { TextField } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -33,6 +34,7 @@ const CreateTask: FC = () => {
   const router = useRouter();
   const createTask = useCreateTask();
   const themes = useTheme();
+  const isMobile = useMediaQuery(themes.breakpoints.down("sm"));
 
   const handleSubmit = async (values: typeof initialValues) => {
     try {
@@ -67,7 +69,6 @@ const CreateTask: FC = () => {
   return (
     <Box
       sx={{
-        mt: "50px",
         borderRadius: "16px",
         boxShadow: 3,
         backgroundColor: themes.palette.grey["100"],
@@ -75,30 +76,37 @@ const CreateTask: FC = () => {
     >
       <Box
         sx={{
-          
           borderTopLeftRadius: "16px",
           borderTopRightRadius: "16px",
 
-          display: "flex",
-          justifyContent:"space-between",
-          flexDirection:"row-reverse",
-          gap: 2,
+          // display: "flex",
+          // justifyContent: "space-between",
+          // flexDirection: "row-reverse",
+          // gap: 2,
           backgroundColor: themes.palette.grey["400"],
-          
+
           width: "100%",
           borderBottom: 1,
           borderColor: "divider",
-          py: 5,
+          // py: 5,
+          py: "14px",
         }}
       >
-        <DarkModeSwitch />
-        <Box sx={{display:"flex", gap:1,}}>
-        <IconButton onClick={() => router.back()} color="primary">
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography variant="h4" component="h1">
-          Create New Task
-        </Typography>
+        <Box
+          sx={{ display: "flex", gap: 1, height: "100%", alignItems: "center" }}
+        >
+          <IconButton onClick={() => router.back()} color="primary">
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography
+            variant="h4"
+            component="h4"
+            sx={{
+              fontSize: isMobile ? "20px" : "34px",
+            }}
+          >
+            Create New Task
+          </Typography>
         </Box>
       </Box>
       <Paper

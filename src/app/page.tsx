@@ -138,7 +138,7 @@ export default function Home() {
     setDeleteConfirmationOpen(false);
     setTaskToDelete(null);
   };
-
+  // move
   const getFilteredTasks = (
     tasks: Task[],
     category: CategoryType,
@@ -152,11 +152,12 @@ export default function Home() {
       case "Open":
         return todaysTasks.filter((task) => !task.is_completed);
       case "Closed":
-        return todaysTasks.filter((task) => task.is_completed);
-      case "Archived":
-        return todaysTasks.filter(
-          (task) => task.is_completed && isBefore(new Date(task.end_date), date)
+        return tasks.filter((task) =>
+          isBefore(new Date(task.end_date), new Date())
         );
+      case "Archived":
+        return todaysTasks.filter((task) => task.is_completed);
+
       default:
         return todaysTasks; // "All"
     }
@@ -230,24 +231,33 @@ export default function Home() {
           borderRadius: "16px",
           pb: 4,
           boxShadow: 2,
-          mt: "50px",
           backgroundColor: themes.palette.grey["100"],
+          overflow: "hidden",
         }}
       >
         <Box
           sx={{
             borderBottom: 1,
             borderColor: "divider",
+            height: "70px",
+            display: "flex",
+            // justifyContent: "space-between",
+            // alignItems: "center",
+            width: "100%",
+            backgroundColor: themes.palette.grey["400"],
           }}
         >
-          <DarkModeSwitch />
-
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
             aria-label="task tabs"
             variant={isMobile ? "fullWidth" : "standard"}
-            sx={{ backgroundColor: themes.palette.grey["400"], pt: 4 }}
+            sx={{
+              // backgroundColor: themes.palette.grey["400"],
+              pt: 0,
+              width: isMobile ? "100%" : "fit-content",
+              alignSelf: "end",
+            }}
             TabIndicatorProps={{
               style: { backgroundColor: themes.palette.grey["300"] },
             }}
@@ -257,7 +267,6 @@ export default function Home() {
               {...a11yProps(0)}
               sx={{
                 fontWeight: 700,
-
                 color: themes.palette.text.primary,
                 "&.Mui-selected": { color: themes.palette.text.primary },
               }}
@@ -266,6 +275,7 @@ export default function Home() {
               label="Tomorrow's Task"
               {...a11yProps(1)}
               sx={{
+                
                 fontWeight: 700,
                 color: themes.palette.text.primary,
                 "&.Mui-selected": { color: themes.palette.text.primary },
@@ -282,7 +292,7 @@ export default function Home() {
             />
 
             <CategoryChips
-              tasks={getFilteredTasks(tasks, "All", new Date())}
+              tasks={tasks}
               date={new Date()}
               selectedCategory={selectedCategory}
               onCategoryChange={(category) => setSelectedCategory(category)}
@@ -316,7 +326,7 @@ export default function Home() {
               handleNewTaskClick={handleNewTaskClick}
             />
             <CategoryChips
-              tasks={getFilteredTasks(tasks, "All", addDays(new Date(), 1))}
+              tasks={tasks}
               date={addDays(new Date(), 1)}
               selectedCategory={selectedCategory}
               onCategoryChange={(category) => setSelectedCategory(category)}

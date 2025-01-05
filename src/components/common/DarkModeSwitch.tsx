@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import FormGroup from "@mui/material/FormGroup";
@@ -71,13 +73,16 @@ export default function DarkModeSwitch() {
   const handleToggle = () => {
     dispatch(toggleDarkMode());
   };
-  const themes =useTheme()
 
   return (
-    <FormGroup sx={{backgroundColor:themes.palette.grey["400"],borderTopLeftRadius: "16px",
-    borderTopRightRadius: "16px",height:"20px"}}>
+    <FormGroup
+      sx={{
+        borderTopLeftRadius: "16px",
+        borderTopRightRadius: "16px",
+      }}
+    >
       <FormControlLabel
-        sx={{ ml: "auto", mt: 2 }}
+        sx={{ ml: "auto" }}
         control={<MaterialUISwitch checked={theme == "dark" ? true : false} />}
         label=""
         onChange={handleToggle}
