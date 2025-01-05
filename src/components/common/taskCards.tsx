@@ -2,6 +2,8 @@ import { Box, Checkbox, Paper, styled, Typography } from "@mui/material";
 import { Task } from "@todolist/core/models/task.model";
 import React, { FC } from "react";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 const TaskCardContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -60,15 +62,18 @@ export const TaskCard: FC<ITaskCard> = ({
         }}
       >
         <Typography
-          variant="h6"
+          variant="h4"
           component="div"
-          color="#000000"
+          // color="black"
           className={is_completed ? "completed" : ""}
+          sx={{fontWeight:500, fontSize:"16px"}}
         >
           {title}
         </Typography>
         <Checkbox
           checked={is_completed}
+          icon={<RadioButtonUncheckedIcon sx={{ fontSize: 24 }} />} // Unchecked state
+          checkedIcon={<CheckCircleIcon sx={{ fontSize: 24 }} />} // Checked state
           sx={{
             color: "primary.main",
             "&.Mui-checked": {
@@ -77,7 +82,7 @@ export const TaskCard: FC<ITaskCard> = ({
           }}
           onClick={handleCheckboxClick}
           onChange={(e) =>
-            onCheckboxChange(_id, e.target.checked) // Trigger the update mutation
+            onCheckboxChange(_id, e.target.checked) 
           }
         />
       </Box>
@@ -87,26 +92,27 @@ export const TaskCard: FC<ITaskCard> = ({
         sx={{
           borderBottom: 1,
           borderColor: "divider",
-          backgroundColor: "white",
+          // backgroundColor: "white",
           mb: 1,
           pb: 2,
+          fontWeight:500, fontSize:"16px"
         }}
       >
         {description}
       </Typography>
 
       <Box sx={{ display: "flex", gap: 1 }}>
-        <Typography variant="body2" color="#BFBFBF">
+        <Typography variant="body2" color="#BFBFBF"sx={{fontWeight:500, fontSize:"12px"}}>
           {dateLabel}
         </Typography>
 
-        <Typography variant="body2" color="#BFBFBF">
+        <Typography variant="body2" color="#BFBFBF" sx={{fontWeight:500, fontSize:"12px"}}>
           {formatTime(new Date(start_date))}
         </Typography>
         <Typography variant="body2" color="#BFBFBF">
           -
         </Typography>
-        <Typography variant="body2" color="#BFBFBF">
+        <Typography variant="body2" color="#BFBFBF"sx={{fontWeight:500, fontSize:"12px"}}>
           {formatTime(new Date(end_date))}
         </Typography>
       </Box>

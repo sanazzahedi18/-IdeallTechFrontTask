@@ -1,13 +1,8 @@
-"use client";
-
 import React, { Fragment } from "react";
 import { Box, Divider, Typography, ButtonBase } from "@mui/material";
-
-import { useGetAllTasks } from "@todolist/core/api/ToDo";
 import StyledBadge from "@todolist/styles/styledBadge";
-import { CategoryChipsProps, CategoryType } from "@todolist/core/models/category.models";
+import { CategoryType } from "@todolist/core/models/category.models";
 import { getCategoryStats } from "@todolist/lib/categoryStats";
-
 
 export interface ICategoryChipsProps {
   tasks: any[];
@@ -16,13 +11,12 @@ export interface ICategoryChipsProps {
   onCategoryChange: (category: CategoryType) => void;
 }
 
-export const CategoryChips =  ({
+export const CategoryChips = ({
   tasks,
   date,
   selectedCategory,
   onCategoryChange,
 }: ICategoryChipsProps) => {
-
   const stats = getCategoryStats(tasks, date);
   console.log(stats);
   return (
@@ -46,7 +40,7 @@ export const CategoryChips =  ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 2,
+                gap: 1,
                 pr: 2,
                 borderRadius: 1,
                 bgcolor: "transparent",
@@ -54,20 +48,23 @@ export const CategoryChips =  ({
             >
               <Typography
                 sx={{
+                  fontWeight: 600,
+                  fontSize: "14px",
                   whiteSpace: "nowrap",
                   color:
-                    selectedCategory === stat.label ? "#0760FB" : "inherit",
+                    selectedCategory === stat.label ? "#0760FB" : "#9F9F9F",
                 }}
               >
                 {stat.label}
               </Typography>
               <StyledBadge
-                badgeContent={<>{stat.count ?? 2}</>}
+                badgeContent={<>{stat.count ?? 0}</>}
                 anchorOrigin={{
                   vertical: "bottom",
                 }}
                 sx={{
                   alignSelf: "center",
+
                   "& .MuiBadge-badge": {
                     backgroundColor:
                       selectedCategory === stat.label ? "#0760FB" : "#D9D9D9",

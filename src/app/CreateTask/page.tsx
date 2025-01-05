@@ -2,7 +2,14 @@
 
 import { FC } from "react";
 import { Formik, Form } from "formik";
-import { Box, Typography, Paper, Button, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  Button,
+  IconButton,
+  useTheme,
+} from "@mui/material";
 import { TextField } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { TaskFormValues } from "@todolist/core/models/createTask.model";
@@ -11,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useCreateTask } from "@todolist/core/api/ToDo";
 import { parse, format } from "date-fns";
 import { toast } from "react-toastify";
+import DarkModeSwitch from "@todolist/components/common/DarkModeSwitch";
 
 export const initialValues = {
   title: "",
@@ -24,6 +32,7 @@ export const initialValues = {
 const CreateTask: FC = () => {
   const router = useRouter();
   const createTask = useCreateTask();
+  const themes = useTheme();
 
   const handleSubmit = async (values: typeof initialValues) => {
     try {
@@ -58,31 +67,39 @@ const CreateTask: FC = () => {
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "100%",
+        mt: "50px",
         borderRadius: "16px",
         boxShadow: 3,
-        backgroundColor: "#F9F9F9",
+        backgroundColor: themes.palette.grey["100"],
       }}
     >
       <Box
         sx={{
+          
+          borderTopLeftRadius: "16px",
+          borderTopRightRadius: "16px",
+
           display: "flex",
+          justifyContent:"space-between",
+          flexDirection:"row-reverse",
           gap: 2,
-          backgroundColor: "white",
-          alignSelf: "flex-start",
+          backgroundColor: themes.palette.grey["400"],
+          
           width: "100%",
           borderBottom: 1,
           borderColor: "divider",
           py: 5,
         }}
       >
+        <DarkModeSwitch />
+        <Box sx={{display:"flex", gap:1,}}>
         <IconButton onClick={() => router.back()} color="primary">
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h4" component="h1">
           Create New Task
         </Typography>
+        </Box>
       </Box>
       <Paper
         sx={{
@@ -90,8 +107,10 @@ const CreateTask: FC = () => {
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          backgroundColor: "#F9F9F9",
+          backgroundColor: themes.palette.grey["100"],
           boxShadow: "none",
+          borderBottomLeftRadius: "16px",
+          borderBottomRightRadius: "16px",
         }}
       >
         <Formik
@@ -110,7 +129,7 @@ const CreateTask: FC = () => {
             <Form>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <TextField
-                  sx={{ backgroundColor: "#ffffff" }}
+                  sx={{ backgroundColor: themes.palette.grey["400"] }}
                   name="title"
                   label="Task Title"
                   value={values.title}
@@ -126,7 +145,7 @@ const CreateTask: FC = () => {
                     label="Start Date"
                     type="date"
                     fullWidth
-                    sx={{ backgroundColor: "#ffffff" }}
+                    sx={{ backgroundColor: themes.palette.grey["400"] }}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -142,7 +161,7 @@ const CreateTask: FC = () => {
                     fullWidth
                     value={values.startTime}
                     onChange={handleChange}
-                    sx={{ backgroundColor: "#ffffff" }}
+                    sx={{ backgroundColor: themes.palette.grey["400"] }}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -157,7 +176,7 @@ const CreateTask: FC = () => {
                     type="date"
                     value={values.endDate}
                     onChange={handleChange}
-                    sx={{ backgroundColor: "#ffffff" }}
+                    sx={{ backgroundColor: themes.palette.grey["400"] }}
                     fullWidth
                     InputLabelProps={{
                       shrink: true,
@@ -172,7 +191,7 @@ const CreateTask: FC = () => {
                     fullWidth
                     value={values.endTime}
                     onChange={handleChange}
-                    sx={{ backgroundColor: "#ffffff" }}
+                    sx={{ backgroundColor: themes.palette.grey["400"] }}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -187,7 +206,7 @@ const CreateTask: FC = () => {
                   multiline
                   value={values.description}
                   onChange={handleChange}
-                  sx={{ backgroundColor: "#ffffff" }}
+                  sx={{ backgroundColor: themes.palette.grey["400"] }}
                   rows={4}
                   fullWidth
                   error={Boolean(errors.description)}
@@ -199,8 +218,20 @@ const CreateTask: FC = () => {
                 >
                   <Button
                     type="button"
-                    variant="outlined"
+                    variant="contained"
+                    // variant="outlined"
                     onClick={() => router.back()}
+                    sx={{
+                      bgcolor: themes.palette.grey["600"],
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: themes.palette.grey["500"],
+
+                      "&:hover": {
+                        bgcolor: "primary",
+                        opacity: 0.9,
+                      },
+                    }}
                   >
                     Cancel
                   </Button>
@@ -208,6 +239,16 @@ const CreateTask: FC = () => {
                     type="submit"
                     variant="contained"
                     disabled={createTask.isPending}
+                    sx={{
+                      bgcolor: themes.palette.grey["600"],
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: themes.palette.grey["500"],
+                      "&:hover": {
+                        bgcolor: "primary",
+                        opacity: 0.9,
+                      },
+                    }}
                   >
                     Create Task
                   </Button>

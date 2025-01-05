@@ -9,6 +9,8 @@ import {
   Box,
   Checkbox,
   Divider,
+  CircularProgress,
+  useTheme,
 } from "@mui/material";
 
 interface TaskDetailsDialogProps {
@@ -31,7 +33,10 @@ export const TaskDetailsDialog = ({
   taskCompletionStatus,
   isLoading,
   error
-}: TaskDetailsDialogProps) => {
+}: TaskDetailsDialogProps) => 
+{
+const themes = useTheme()
+
   if (isLoading) {
     return (
       <Dialog open={open} onClose={onClose}>
@@ -68,6 +73,7 @@ export const TaskDetailsDialog = ({
           height: "500px",
           borderRadius: 2,
           p: 2,
+          bgcolor:themes.palette.grey["400"]
         },
       }}
     >
@@ -77,6 +83,7 @@ export const TaskDetailsDialog = ({
           textAlign: "center",
           mb: 2,
           textDecoration: taskCompletionStatus ? "line-through" : "none",
+         
         }}
       >
         {task.title}
@@ -88,6 +95,7 @@ export const TaskDetailsDialog = ({
           flexDirection: "column",
           gap: 2,
           overflowY: "auto",
+          
         }}
       >
         <Typography variant="body2">
@@ -118,6 +126,7 @@ export const TaskDetailsDialog = ({
           <Checkbox
             checked={taskCompletionStatus}
             onChange={(e) => onStatusChange(task._id, e.target.checked)}
+           
           />
           {taskCompletionStatus ? "Mark as Uncompleted" : "Mark as Completed"}
         </Box>
@@ -128,9 +137,11 @@ export const TaskDetailsDialog = ({
           variant="contained"
           color="primary"
           sx={{
-            px: 3,
-            bgcolor: "#0760FB1A",
-            color: "#0760FB",
+            bgcolor: themes.palette.grey["600"],
+            fontWeight: 500,
+            fontSize: "14px",
+            color: themes.palette.grey["500"],
+
             "&:hover": {
               bgcolor: "primary",
               opacity: 0.9,

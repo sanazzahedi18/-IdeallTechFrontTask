@@ -4,19 +4,15 @@ import { useState } from "react";
 import {
   Box,
   Typography,
-  Button,
   Tabs,
   Tab,
   Grid2,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
-  DialogActions,
   useMediaQuery,
   CircularProgress,
-  Divider,
-  Checkbox,
+  styled,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CategoryChips } from "@todolist/components/common/categoryChips";
@@ -29,15 +25,7 @@ import {
   useTaskDetails,
   useUpdateTask,
 } from "@todolist/core/api/ToDo";
-import {
-  addDays,
-  format,
-  isAfter,
-  isBefore,
-  isSameDay,
-  isToday,
-  startOfDay,
-} from "date-fns";
+import { addDays, isBefore, isSameDay } from "date-fns";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CategoryType } from "@todolist/core/models/category.models";
@@ -46,6 +34,7 @@ import { TabHeader } from "@todolist/components/common/TabHeader";
 import { TaskCard } from "@todolist/components/common/TaskCards";
 import { TaskDetailsDialog } from "@todolist/components/dialogs/TaskDetailsDialog";
 import { DeleteConfirmationDialog } from "@todolist/components/common/DeleteConfirmationDialog";
+import DarkModeSwitch from "@todolist/components/common/DarkModeSwitch";
 
 function a11yProps(index: number) {
   return {
@@ -150,15 +139,12 @@ export default function Home() {
     setTaskToDelete(null);
   };
 
-  // Add this function to filter tasks based on category
   const getFilteredTasks = (
     tasks: Task[],
     category: CategoryType,
     date: Date
   ) => {
     const todaysTasks = tasks.filter((task) =>
-      // isToday(new Date(task.start_date)),
-      // isAfter(startOfDay(date), task.start_date)
       isSameDay(date, task.start_date)
     );
 
@@ -169,8 +155,7 @@ export default function Home() {
         return todaysTasks.filter((task) => task.is_completed);
       case "Archived":
         return todaysTasks.filter(
-          (task) =>
-            task.is_completed && isBefore(new Date(task.end_date), date)
+          (task) => task.is_completed && isBefore(new Date(task.end_date), date)
         );
       default:
         return todaysTasks; // "All"
@@ -183,6 +168,9 @@ export default function Home() {
     isError: taskDetailsError,
   } = useTaskDetails(selectedTask);
   console.log("taskDetailsData", taskDetailsData);
+  const tasks = data || [];
+  // const StyledBox = styled(Box)({});
+  const themes = useTheme();
   if (isLoading) {
     return (
       <Box
@@ -235,8 +223,6 @@ export default function Home() {
     );
   }
 
-  const tasks = data || [];
-
   return (
     <>
       <Box
@@ -244,28 +230,50 @@ export default function Home() {
           borderRadius: "16px",
           pb: 4,
           boxShadow: 2,
-          backgroundColor: "#F9F9F9",
+          mt: "50px",
+          backgroundColor: themes.palette.grey["100"],
         }}
       >
         <Box
           sx={{
             borderBottom: 1,
             borderColor: "divider",
-            backgroundColor: "white",
           }}
         >
+          <DarkModeSwitch />
+
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
             aria-label="task tabs"
             variant={isMobile ? "fullWidth" : "standard"}
-            sx={{ backgroundColor: "white", pt: 4 }}
+            sx={{ backgroundColor: themes.palette.grey["400"], pt: 4 }}
+            TabIndicatorProps={{
+              style: { backgroundColor: themes.palette.grey["300"] },
+            }}
           >
-            <Tab label="Today's Task" {...a11yProps(0)} />
-            <Tab label="Tomorrow's Task" {...a11yProps(1)} />
+            <Tab
+              label="Today's Task"
+              {...a11yProps(0)}
+              sx={{
+                fontWeight: 700,
+
+                color: themes.palette.text.primary,
+                "&.Mui-selected": { color: themes.palette.text.primary },
+              }}
+            />
+            <Tab
+              label="Tomorrow's Task"
+              {...a11yProps(1)}
+              sx={{
+                fontWeight: 700,
+                color: themes.palette.text.primary,
+                "&.Mui-selected": { color: themes.palette.text.primary },
+              }}
+            />
           </Tabs>
         </Box>
-        <Box sx={{ backgroundColor: "#F9F9F9", py: 2 }}>
+        <Box sx={{ backgroundColor: themes.palette.grey["100"], py: 2 }}>
           <CustomTabPanel value={tabValue} index={0}>
             <TabHeader
               title={"Today's Task"}
@@ -308,11 +316,7 @@ export default function Home() {
               handleNewTaskClick={handleNewTaskClick}
             />
             <CategoryChips
-              tasks={getFilteredTasks(
-                tasks,
-                "All",
-                addDays(new Date(), 1)
-              )}
+              tasks={getFilteredTasks(tasks, "All", addDays(new Date(), 1))}
               date={addDays(new Date(), 1)}
               selectedCategory={selectedCategory}
               onCategoryChange={(category) => setSelectedCategory(category)}
@@ -345,16 +349,16 @@ export default function Home() {
       </Box>
 
       {taskDetailsData && (
-       <TaskDetailsDialog
-       open={open}
-       onClose={handleClose}
-       task={taskDetailsData}
-       onDelete={openDeleteConfirmationDialog}
-       onStatusChange={handleCheckboxChange}
-       taskCompletionStatus={taskCompletionStatus}
-       isLoading={taskDetailsLoading}
-       error={taskDetailsError}
-     />
+        <TaskDetailsDialog
+          open={open}
+          onClose={handleClose}
+          task={taskDetailsData}
+          onDelete={openDeleteConfirmationDialog}
+          onStatusChange={handleCheckboxChange}
+          taskCompletionStatus={taskCompletionStatus}
+          isLoading={taskDetailsLoading}
+          error={taskDetailsError}
+        />
       )}
       {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog

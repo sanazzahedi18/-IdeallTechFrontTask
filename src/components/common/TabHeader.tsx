@@ -1,4 +1,10 @@
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import theme from "@todolist/styles/theme";
 import { format } from "date-fns";
 import AddIcon from "@mui/icons-material/Add";
@@ -16,7 +22,9 @@ export const TabHeader: FC<ITabHeaderProps> = ({
   title,
   date,
 }) => {
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const themes = useTheme();
 
   return (
     <>
@@ -33,12 +41,22 @@ export const TabHeader: FC<ITabHeaderProps> = ({
             variant={isMobile ? "h5" : "h4"}
             component="h1"
             gutterBottom
+            sx={{
+              fontWeight: 700,
+              fontSize: `${isMobile ? "20px" : "h4"}`,
+            }}
           >
             {title}
           </Typography>
-          <Typography variant="subtitle1" color="#9F9F9F">
+          <Typography
+            variant="subtitle1"
+            color="#9F9F9F"
+            sx={{
+              fontWeight: 500,
+              fontSize: `${isMobile ? "14px" : "28px"}`,
+            }}
+          >
             {format(date, "EEEE, dd MMM")}
-            {/* {format(addDays(new Date(), 1), "EEEE, dd MMM")} */}
           </Typography>
         </Box>
         <Button
@@ -46,8 +64,11 @@ export const TabHeader: FC<ITabHeaderProps> = ({
           onClick={handleNewTaskClick}
           startIcon={<AddIcon />}
           sx={{
-            bgcolor: "#0760FB1A",
-            color: "#0760FB",
+            bgcolor: themes.palette.grey["600"],
+            fontWeight: 500,
+            fontSize: "14px",
+            color: themes.palette.grey["500"],
+
             "&:hover": {
               bgcolor: "primary",
               opacity: 0.9,
