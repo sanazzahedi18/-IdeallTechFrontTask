@@ -1,4 +1,3 @@
-import { Task } from "@todolist/core/models/task.model";
 import {
   Dialog,
   DialogTitle,
@@ -9,21 +8,12 @@ import {
   Box,
   Checkbox,
   Divider,
-  CircularProgress,
   useTheme,
 } from "@mui/material";
-
-interface TaskDetailsDialogProps {
-  open: boolean;
-  onClose: () => void;
-  task: Task;
-  onDelete: () => void;
-
-  onStatusChange: (isCompleted: boolean) => void;
-  taskCompletionStatus: boolean;
-  isLoading?: boolean;
-  error?: boolean;
-}
+import { LoadingDialog } from "./LoadingDialog";
+import { ErrorDialog } from "./ErrorDialog";
+import { TaskDateTimeFormatter } from "@todolist/core/utils/date.utils";
+import { TaskDetailsDialogProps } from "@todolist/core/models/taskDetails.model";
 
 export const TaskDetailsDialog = ({
   open,
@@ -33,30 +23,18 @@ export const TaskDetailsDialog = ({
   onStatusChange,
   taskCompletionStatus,
   isLoading,
-  error
+  error,
 }: TaskDetailsDialogProps) => {
   const themes = useTheme();
 
+  const dateTimeFormatter = new TaskDateTimeFormatter();
+
   if (isLoading) {
-    return (
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Loading...</DialogTitle>
-        <DialogContent>
-          <CircularProgress />
-        </DialogContent>
-      </Dialog>
-    );
+    return <LoadingDialog open={open} onClose={onClose} />;
   }
 
   if (error) {
-    return (
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Error</DialogTitle>
-        <DialogContent>
-          <Typography color="error">Failed to load task details</Typography>
-        </DialogContent>
-      </Dialog>
-    );
+    return <ErrorDialog open={open} onClose={onClose} />;
   }
 
   return (
@@ -68,10 +46,10 @@ export const TaskDetailsDialog = ({
       PaperProps={{
         sx: {
           width: "600px",
-          height: "500px",
+          height: "450px",
           borderRadius: 2,
           p: 2,
-          bgcolor: themes.palette.grey["400"]
+          bgcolor: themes.palette.grey["400"],
         },
       }}
     >
@@ -80,7 +58,7 @@ export const TaskDetailsDialog = ({
           fontWeight: "bold",
           textAlign: "center",
           mb: 2,
-          textDecoration: taskCompletionStatus ? "line-through" : "none",
+          textDecoration: task.is_completed ? "line-through" : "none",
         }}
       >
         {task.title}
@@ -99,23 +77,18 @@ export const TaskDetailsDialog = ({
         </Typography>
         <Typography variant="body2">
           <strong>Start Date:</strong>{" "}
-          {task.start_date
-            ? new Date(task.start_date).toDateString()
-            : "N/A"}
+          {dateTimeFormatter.format(task.start_date)}
         </Typography>
         <Typography variant="body2">
-          <strong>End Date:</strong>{" "}
-          {task.end_date
-            ? new Date(task.end_date).toDateString()
-            : "N/A"}
+          <strong>End Date:</strong> {dateTimeFormatter.format(task.end_date)}
         </Typography>
         <Typography variant="body2">
           <strong>Status:</strong>{" "}
-          {task.is_completed ? "Completed" : "Pending"}
+          {task.is_completed ? "Completed" : "Uncompleted"}
         </Typography>
         <Typography variant="body2">
           <strong>Created At:</strong>{" "}
-          {new Date(task.createdAt).toLocaleString()}
+          {dateTimeFormatter.format(task.createdAt)}
         </Typography>
 
         <Box>

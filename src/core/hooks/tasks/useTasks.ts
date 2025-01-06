@@ -1,9 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useDeleteTask, useGetAllTasks, useTaskDetails, useUpdateTask } from "@todolist/core/api/ToDo";
+
 import { Task } from "@todolist/core/models/task.model";
 import { CategoryType } from "@todolist/core/models/category.models";
 import { isBefore, isSameDay } from "date-fns";
+import { useDeleteTask, useGetAllTasks, useTaskDetails, useUpdateTask } from "@todolist/core/api/ToDo";
 
 export const useTasks = (selectedTask: string) => {
   const queryClient = useQueryClient();
@@ -24,7 +25,9 @@ export const useTasks = (selectedTask: string) => {
           toast.success(isCompleted ? "Task is Done" : "Task is not done");
           queryClient.invalidateQueries({ queryKey: ["getAllTasks"] });
           if (selectedTask === taskId) {
-            queryClient.invalidateQueries({ queryKey: ["taskDetails", taskId] });
+            queryClient.invalidateQueries({
+              queryKey: ["taskDetails", taskId],
+            });
           }
         },
         onError: () => {
@@ -42,19 +45,29 @@ export const useTasks = (selectedTask: string) => {
         onSuccess();
       },
       onError: (error) => {
-        toast.error(error?.message || "Failed to delete the task. Please try again.");
+        toast.error(
+          error?.message || "Failed to delete the task. Please try again."
+        );
       },
     });
   };
 
-  const getFilteredTasks = (tasks: Task[], category: CategoryType, date: Date) => {
-    const todaysTasks = tasks.filter((task) => isSameDay(date, task.start_date));
+  const getFilteredTasks = (
+    tasks: Task[],
+    category: CategoryType,
+    date: Date
+  ) => {
+    const todaysTasks = tasks.filter((task) =>
+      isSameDay(date, task.start_date)
+    );
 
     switch (category) {
       case "Open":
         return todaysTasks.filter((task) => !task.is_completed);
       case "Closed":
-        return tasks.filter((task) => isBefore(new Date(task.end_date), new Date()));
+        return tasks.filter((task) =>
+          isBefore(new Date(task.end_date), new Date())
+        );
       case "Archived":
         return todaysTasks.filter((task) => task.is_completed);
       default:

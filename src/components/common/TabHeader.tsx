@@ -1,3 +1,4 @@
+import React, { FC } from "react";
 import {
   Box,
   Button,
@@ -5,11 +6,11 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import theme from "@todolist/styles/theme";
+
 import { format } from "date-fns";
 import AddIcon from "@mui/icons-material/Add";
 
-import React, { FC } from "react";
+
 
 interface ITabHeaderProps {
   handleNewTaskClick: () => void;

@@ -2,8 +2,8 @@
 import { CategoryType } from "@todolist/core/models/category.models";
 import { Task } from "@todolist/core/models/task.model";
 import { TabHeader } from "@todolist/components/common/TabHeader";
-import { CategoryChips } from "@todolist/components/common/categoryChips";
-import { TaskList } from "../tasks/TaskList";
+import { CategoryChips } from "@todolist/components/common/CategoryChips";
+import { TaskList } from "../../common/TaskList";
 
 interface TabContentProps {
   title: string;

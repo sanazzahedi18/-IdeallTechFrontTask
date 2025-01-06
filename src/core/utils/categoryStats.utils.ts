@@ -1,6 +1,6 @@
 import { CategoryType } from "@todolist/core/models/category.models";
 import { Task } from "@todolist/core/models/task.model";
-import { isToday, isBefore, isSameDay } from "date-fns";
+import { isBefore, isSameDay } from "date-fns";
 
 export const getCategoryStats = (tasks: Task[], date: Date) => [
   {

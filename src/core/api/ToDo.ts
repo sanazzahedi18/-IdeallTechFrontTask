@@ -1,9 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { api } from "../interceptor";
-import { APIRoutes } from "./APIRoutes/APIRoutes";
-import { TaskFormValues } from "../models/createTask.model";
+
+import { APIRoutes } from "./APIRoutes";
+
 import { AxiosResponse } from "axios";
+import { TaskFormValues } from "../models/createTask.model";
+import { api } from "../interceptor";
 import { Task } from "../models/task.model";
+
 
 interface ICreateTaskResponse {
   data: Task;

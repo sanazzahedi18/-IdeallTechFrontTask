@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { addDays } from "date-fns";
 import { Task } from "@todolist/core/models/task.model";
 import { CategoryType } from "@todolist/core/models/category.models";
-import { CustomTabPanel } from "@todolist/components/common/CustomTabPanel";
+import { CustomTabPanel } from "@todolist/components/features/tabs/CustomTabPanel";
 import { TabContent } from "@todolist/components/features/tabs/TabContent";
 
 interface TaskTabsProps {

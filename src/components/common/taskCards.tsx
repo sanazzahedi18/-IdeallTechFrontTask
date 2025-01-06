@@ -66,7 +66,7 @@ export const TaskCard: FC<ITaskCard> = ({
           component="div"
           // color="black"
           className={is_completed ? "completed" : ""}
-          sx={{fontWeight:500, fontSize:"16px"}}
+          sx={{ fontWeight: 500, fontSize: "16px" }}
         >
           {title}
         </Typography>
@@ -81,9 +81,7 @@ export const TaskCard: FC<ITaskCard> = ({
             },
           }}
           onClick={handleCheckboxClick}
-          onChange={(e) =>
-            onCheckboxChange(_id, e.target.checked) 
-          }
+          onChange={(e) => onCheckboxChange(_id, e.target.checked)}
         />
       </Box>
       <Typography
@@ -92,27 +90,39 @@ export const TaskCard: FC<ITaskCard> = ({
         sx={{
           borderBottom: 1,
           borderColor: "divider",
-          // backgroundColor: "white",
           mb: 1,
           pb: 2,
-          fontWeight:500, fontSize:"16px"
+          fontWeight: 500,
+          fontSize: "16px",
         }}
       >
         {description}
       </Typography>
 
       <Box sx={{ display: "flex", gap: 1 }}>
-        <Typography variant="body2" color="#BFBFBF"sx={{fontWeight:500, fontSize:"12px"}}>
+        <Typography
+          variant="body2"
+          color="#BFBFBF"
+          sx={{ fontWeight: 500, fontSize: "12px" }}
+        >
           {dateLabel}
         </Typography>
 
-        <Typography variant="body2" color="#BFBFBF" sx={{fontWeight:500, fontSize:"12px"}}>
+        <Typography
+          variant="body2"
+          color="#BFBFBF"
+          sx={{ fontWeight: 500, fontSize: "12px" }}
+        >
           {formatTime(new Date(start_date))}
         </Typography>
         <Typography variant="body2" color="#BFBFBF">
           -
         </Typography>
-        <Typography variant="body2" color="#BFBFBF"sx={{fontWeight:500, fontSize:"12px"}}>
+        <Typography
+          variant="body2"
+          color="#BFBFBF"
+          sx={{ fontWeight: 500, fontSize: "12px" }}
+        >
           {formatTime(new Date(end_date))}
         </Typography>
       </Box>

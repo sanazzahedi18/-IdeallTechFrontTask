@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 import { Box, Divider, Typography, ButtonBase } from "@mui/material";
-import StyledBadge from "@todolist/styles/styledBadge";
+import StyledBadge from "@todolist/core/styles/styledBadge";
 import { CategoryType } from "@todolist/core/models/category.models";
-import { getCategoryStats } from "@todolist/lib/categoryStats";
+import { getCategoryStats } from "@todolist/core/utils/categoryStats.utils";
 import { Task } from "@todolist/core/models/task.model";
 
 export interface ICategoryChipsProps {
@@ -77,7 +77,7 @@ export const CategoryChips = ({
             </Box>
           </ButtonBase>
           {index === 0 && (
-            <Divider orientation="vertical" flexItem sx={{mx:1}}  />
+            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
           )}
         </Fragment>
       ))}

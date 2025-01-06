@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { TextField, Box } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { ITaskFormValues } from "@todolist/core/models/taskForm.models";
+import { ITaskFormValues } from "@todolist/core/models/taskForm.model";
 
 interface TaskFormFieldsProps {
   values: ITaskFormValues;

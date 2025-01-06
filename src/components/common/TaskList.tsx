@@ -1,6 +1,6 @@
 import { Grid2 } from "@mui/material";
 import { Task } from "@todolist/core/models/task.model";
-import { TaskCard } from "@todolist/components/common/taskCards";
+import { TaskCard } from "@todolist/components/common/TaskCards";
 
 interface TaskListProps {
   tasks: Task[];

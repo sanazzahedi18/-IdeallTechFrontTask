@@ -1,9 +1,8 @@
-import { useRouter } from 'next/navigation';
-import { useCreateTask } from '@todolist/core/api/ToDo';
-import { toast } from 'react-toastify';
-import { ITaskFormValues } from '@todolist/core/models/taskForm.models';
-import { TaskMapper } from '@todolist/services/task.mapper';
-
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { ITaskFormValues } from "@todolist/core/models/taskForm.model";
+import { TaskMapper } from "@todolist/core/mappers/task.mapper";
+import { useCreateTask } from "@todolist/core/api/ToDo";
 
 export const useTaskForm = () => {
   const router = useRouter();
@@ -12,7 +11,7 @@ export const useTaskForm = () => {
   const handleSubmit = async (values: ITaskFormValues) => {
     try {
       const taskDTO = TaskMapper.toDTO(values);
-     
+
       createTask.mutate(taskDTO, {
         onSuccess() {
           toast.success("Task has been successfully created");
@@ -30,6 +29,6 @@ export const useTaskForm = () => {
   return {
     handleSubmit,
     isSubmitting: createTask.isPending,
-    goBack: () => router.back()
+    goBack: () => router.back(),
   };
 };

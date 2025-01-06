@@ -4,11 +4,11 @@ import { FC } from "react";
 import { Formik, Form } from "formik";
 import { Box, Paper, useTheme } from "@mui/material";
 import { taskValidationSchema } from "@todolist/core/validations/create-task.validation";
-import { ITaskFormValues } from "@todolist/core/models/taskForm.models";
-import { useTaskForm } from "@todolist/hooks/features/tasks/useTaskForm";
+import { ITaskFormValues } from "@todolist/core/models/taskForm.model";
 import { CreateTaskHeader } from "@todolist/components/features/tasks/CreateTaskHeader";
 import { TaskFormFields } from "@todolist/components/features/tasks/TaskFormFields";
 import { TaskFormActions } from "@todolist/components/features/tasks/TaskFormActions";
+import { useTaskForm } from "@todolist/core/hooks/tasks/useTaskForm";
 
 export const initialValues: ITaskFormValues = {
   title: "",

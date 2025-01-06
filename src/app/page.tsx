@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { Task } from "@todolist/core/models/task.model";
 import { CategoryType } from "@todolist/core/models/category.models";
-import { useTasks } from "@todolist/hooks/features/tasks/useTasks";
+import { useTasks } from "@todolist/core/hooks/tasks/useTasks";
 import { LoadingState } from "@todolist/components/common/LoadingState";
 import { ErrorState } from "@todolist/components/common/ErrorState";
 import { TaskTabs } from "@todolist/components/features/tabs/TaskTabs";
