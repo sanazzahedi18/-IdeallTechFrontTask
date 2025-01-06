@@ -73,11 +73,11 @@ src/
 │   ├── common/
 │   │   ├── CategoryChips.tsx
 │   │   ├── DarkModeSwitch.tsx
-│   │   ├── ErrorState.tsx
-│   │   ├── LoadingState.tsx
 │   │   ├── TabHeader.tsx
 │   │   ├── TaskCards.tsx
 │   │   └── TaskList.tsx
+│   │   
+│   │   
 │   ├── dialogs/
 │   │   ├── DeleteConfirmationDialog.tsx
 │   │   ├── ErrorDialog.tsx

@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { FC } from "react";
 import { Formik, Form } from "formik";
@@ -10,6 +10,7 @@ import { TaskFormFields } from "@todolist/components/features/tasks/TaskFormFiel
 import { TaskFormActions } from "@todolist/components/features/tasks/TaskFormActions";
 import { useTaskForm } from "@todolist/core/hooks/tasks/useTaskForm";
 
+// Default values to prevent form undefined errors and provide clear starting state
 export const initialValues: ITaskFormValues = {
   title: "",
   startDate: "",
@@ -21,9 +22,11 @@ export const initialValues: ITaskFormValues = {
 
 const CreateTask: FC = () => {
   const themes = useTheme();
+  // Custom hook to separate form logic from presentation and enable reuse
   const { handleSubmit, isSubmitting, goBack } = useTaskForm();
 
   return (
+ 
     <Box
       sx={{
         borderRadius: "16px",
@@ -32,6 +35,8 @@ const CreateTask: FC = () => {
       }}
     >
       <CreateTaskHeader onBack={goBack} />
+     
+      {/* Paper component wraps form for proper spacing and visual separation */}
       <Paper
         sx={{
           p: 4,
@@ -39,18 +44,21 @@ const CreateTask: FC = () => {
           flexDirection: "column",
           width: "100%",
           backgroundColor: themes.palette.grey["100"],
-          boxShadow: "none",
+          boxShadow: "none", 
           borderBottomLeftRadius: "16px",
           borderBottomRightRadius: "16px",
         }}
       >
+        {/* Formik handles form state and validation to reduce boilerplate and ensure data consistency */}
         <Formik
           initialValues={initialValues}
           validationSchema={taskValidationSchema}
           onSubmit={handleSubmit}
         >
+          {/* Render props pattern to access form state and handlers */}
           {({ values, errors, handleChange }) => (
             <Form>
+             
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <TaskFormFields
                   values={values}

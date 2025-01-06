@@ -18,6 +18,7 @@ interface ApiResponse<T> {
   data: T;
 }
 
+// Helper function to create a task. Encapsulates the API call to maintain modularity and reusability.
 const createTask = async (
   data: TaskFormValues
 ): Promise<AxiosResponse<ICreateTaskResponse>> => {
@@ -30,6 +31,7 @@ const createTask = async (
   }
 };
 
+// Custom hook for creating tasks. Keeps mutation logic isolated and reusable.
 export const useCreateTask = () => {
   return useMutation({
     mutationKey: ["task"],
@@ -39,16 +41,18 @@ export const useCreateTask = () => {
   });
 };
 
+// Helper function to fetch all tasks
 const getAllTasks = async (): Promise<Task[]> => {
   try {
     const response = await api.get<ApiResponse<Task[]>>(APIRoutes.GetAllTasks);
-    return response.data.data; // Ensure the API returns the array of tasks
+    return response.data.data; 
   } catch (error) {
     console.error(error);
-    return []; // Always return an empty array if there's an error
+    return []; 
   }
 };
 
+// Custom hook for fetching all tasks
 export const useGetAllTasks = () => {
   return useQuery<Task[], Error>({
     queryKey: ["getAllTasks"],
@@ -56,6 +60,7 @@ export const useGetAllTasks = () => {
   });
 };
 
+// Helper function to fetch details of a specific task by ID.
 const taskDetails = async (id: string) => {
   try {
     const response = await api.get(`${APIRoutes.TaskDetails}/${id}`);
@@ -66,6 +71,7 @@ const taskDetails = async (id: string) => {
   }
 };
 
+// Custom hook for fetching task details by ID.
 export const useTaskDetails = (id: string) => {
   return useQuery({
     queryKey: ["taskDetails", id],
@@ -74,6 +80,7 @@ export const useTaskDetails = (id: string) => {
   });
 };
 
+// Helper function to update a task's status.
 const updateTask = async (id: string, isCompleted: boolean) => {
   try {
     const response = await api.put(`${APIRoutes.UpdateTask}/${id}`, {
@@ -86,6 +93,7 @@ const updateTask = async (id: string, isCompleted: boolean) => {
   }
 };
 
+// Custom hook for updating task status.
 export const useUpdateTask = () => {
   return useMutation({
     mutationFn: (data: { id: string; isCompleted: boolean }) =>
@@ -93,6 +101,7 @@ export const useUpdateTask = () => {
   });
 };
 
+// Helper function to delete a task by ID.
 const deleteTask = async (
   Id: string
 ): Promise<AxiosResponse<ApiResponse<null>>> => {
@@ -107,6 +116,7 @@ const deleteTask = async (
   }
 };
 
+// Custom hook for deleting tasks.
 export const useDeleteTask = () => {
   return useMutation<AxiosResponse<ApiResponse<null>>, Error, string>({
     mutationFn: (taskId: string) => deleteTask(taskId),

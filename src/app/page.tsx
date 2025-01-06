@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { useState } from "react";
 import { Box } from "@mui/material";
@@ -7,15 +7,15 @@ import { useRouter } from "next/navigation";
 import { Task } from "@todolist/core/models/task.model";
 import { CategoryType } from "@todolist/core/models/category.models";
 import { useTasks } from "@todolist/core/hooks/tasks/useTasks";
-import { LoadingState } from "@todolist/components/common/LoadingState";
-import { ErrorState } from "@todolist/components/common/ErrorState";
 import { TaskTabs } from "@todolist/components/features/tabs/TaskTabs";
 import { TaskDialogs } from "@todolist/components/dialogs/TaskDialogs";
 
+// Props interface to allow customization of initial tab selection
 export interface HomeViewProps {
   initialTabValue?: number;
 }
 
+// Centralized dialog state to manage multiple modal states and prevent state conflicts
 interface DialogState {
   taskDetails: {
     open: boolean;
@@ -29,6 +29,7 @@ interface DialogState {
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
+  // State initialization at component level to maintain consistency across child components
   const [tabValue, setTabValue] = useState(initialTabValue);
   const [dialogState, setDialogState] = useState<DialogState>({
     taskDetails: { open: false, selectedTask: "", completionStatus: false },
@@ -39,6 +40,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
   const theme = useTheme();
   const router = useRouter();
 
+  // Custom hook to centralize task-related operations and state management
   const {
     tasks,
     isLoading,
@@ -52,6 +54,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
     getFilteredTasks,
   } = useTasks(dialogState.taskDetails.selectedTask);
 
+  // Opens task details dialog to show more information when user needs to view/edit a task
   const handleTaskClick = (task: Task) => {
     setDialogState((prev) => ({
       ...prev,
@@ -63,6 +66,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
     }));
   };
 
+  // Resets dialog state to prevent stale data when reopening
   const handleDialogClose = () => {
     setDialogState((prev) => ({
       ...prev,
@@ -70,8 +74,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
     }));
   };
 
+  // Redirects to create task page instead of modal for better UX with complex form
   const handleNewTaskClick = () => router.push("/CreateTask");
 
+  // Two-step delete process to prevent accidental deletions
   const handleDeleteDialogOpen = (taskId: string) => {
     setDialogState((prev) => ({
       ...prev,
@@ -79,6 +85,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
     }));
   };
 
+  // Resets delete confirmation state to prevent accidental deletions on next open
   const handleDeleteDialogClose = () => {
     setDialogState((prev) => ({
       ...prev,
@@ -86,6 +93,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
     }));
   };
 
+  // Ensures task exists before deletion and handles cleanup after successful delete
   const handleDeleteConfirm = () => {
     const { taskToDelete } = dialogState.deleteConfirmation;
     if (!taskToDelete) return;
@@ -96,8 +104,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
     });
   };
 
-  if (isLoading) return <LoadingState />;
-  if (isError) return <ErrorState message="Failed to load tasks" />;
+
 
   return (
     <>
@@ -123,6 +130,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ initialTabValue = 0 }) => {
         />
       </Box>
 
+      {/* Separated dialogs component to reduce main component complexity */}
       <TaskDialogs
         dialogState={dialogState}
         taskDetailsData={taskDetailsData}

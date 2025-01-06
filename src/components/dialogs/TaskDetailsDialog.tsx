@@ -12,8 +12,10 @@ import {
 } from "@mui/material";
 import { LoadingDialog } from "./LoadingDialog";
 import { ErrorDialog } from "./ErrorDialog";
-import { TaskDateTimeFormatter } from "@todolist/core/utils/date.utils";
+
 import { TaskDetailsDialogProps } from "@todolist/core/models/taskDetails.model";
+import { TaskDateTimeFormatter } from "@todolist/core/utils/date.utils";
+
 
 export const TaskDetailsDialog = ({
   open,
@@ -26,13 +28,13 @@ export const TaskDetailsDialog = ({
   error,
 }: TaskDetailsDialogProps) => {
   const themes = useTheme();
-
+  // Centralizes date formatting logic for consistency across the dialog
   const dateTimeFormatter = new TaskDateTimeFormatter();
 
+  // Early returns for loading/error states to prevent invalid renders
   if (isLoading) {
     return <LoadingDialog open={open} onClose={onClose} />;
   }
-
   if (error) {
     return <ErrorDialog open={open} onClose={onClose} />;
   }
@@ -49,10 +51,11 @@ export const TaskDetailsDialog = ({
           height: "450px",
           borderRadius: 2,
           p: 2,
-          bgcolor: themes.palette.grey["400"],
+          bgcolor: themes.palette.grey["400"], // Consistent with app's color scheme
         },
       }}
     >
+     
       <DialogTitle
         sx={{
           fontWeight: "bold",
@@ -63,15 +66,20 @@ export const TaskDetailsDialog = ({
       >
         {task.title}
       </DialogTitle>
+
+     
       <Divider variant="middle" />
+
+     
       <DialogContent
         sx={{
           display: "flex",
           flexDirection: "column",
           gap: 2,
-          overflowY: "auto",
+          overflowY: "auto", 
         }}
       >
+       
         <Typography variant="body2">
           <strong>Description:</strong> {task.description}
         </Typography>
@@ -91,6 +99,7 @@ export const TaskDetailsDialog = ({
           {dateTimeFormatter.format(task.createdAt)}
         </Typography>
 
+        {/* Quick status toggle for better UX */}
         <Box>
           <Checkbox
             checked={task.is_completed}
@@ -99,6 +108,8 @@ export const TaskDetailsDialog = ({
           {task.is_completed ? "Mark as Uncompleted" : "Mark as Completed"}
         </Box>
       </DialogContent>
+
+      
       <DialogActions sx={{ justifyContent: "center" }}>
         <Button
           onClick={onClose}
@@ -124,7 +135,7 @@ export const TaskDetailsDialog = ({
           sx={{
             px: 3,
             bgcolor: "#FB1A1A1A",
-            color: "#FB1A1A",
+            color: "#FB1A1A", 
             "&:hover": {
               bgcolor: "error",
               opacity: 0.9,

@@ -5,17 +5,19 @@ import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
+// Styled component for consistent card styling and completed task visualization
 const TaskCardContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   height: "100%",
   display: "flex",
   flexDirection: "column",
   "& .completed": {
-    textDecoration: "line-through",
+    textDecoration: "line-through", // Visual indicator for completed tasks
     color: theme.palette.text.secondary,
   },
 }));
 
+// Extends Task interface to include interaction handlers while maintaining type safety
 interface ITaskCard extends Task {
   onClick: () => void;
   onCheckboxChange: (taskId: string, isCompleted: boolean) => void;
@@ -33,9 +35,11 @@ export const TaskCard: FC<ITaskCard> = ({
   onClick,
   onCheckboxChange,
 }) => {
+  // Converts technical dates into user-friendly formats
   const createdDate = new Date(start_date);
-
   let dateLabel = "";
+
+  // Uses relative dates for better user understanding
   if (isToday(createdDate)) {
     dateLabel = "Today";
   } else if (isTomorrow(createdDate)) {
@@ -46,11 +50,14 @@ export const TaskCard: FC<ITaskCard> = ({
     dateLabel = format(createdDate, "MMM dd, yyyy");
   }
 
+  // Ensures consistent time format across the app
   const formatTime = (date: Date) => format(date, "p");
 
+  // Prevents card click handler from triggering when checking/unchecking
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
   return (
     <TaskCardContainer elevation={1} onClick={onClick}>
       <Box
@@ -64,16 +71,16 @@ export const TaskCard: FC<ITaskCard> = ({
         <Typography
           variant="h4"
           component="div"
-          // color="black"
           className={is_completed ? "completed" : ""}
           sx={{ fontWeight: 500, fontSize: "16px" }}
         >
           {title}
         </Typography>
+        {/* Custom checkbox for better visual feedback */}
         <Checkbox
           checked={is_completed}
-          icon={<RadioButtonUncheckedIcon sx={{ fontSize: 24 }} />} // Unchecked state
-          checkedIcon={<CheckCircleIcon sx={{ fontSize: 24 }} />} // Checked state
+          icon={<RadioButtonUncheckedIcon sx={{ fontSize: 24 }} />}
+          checkedIcon={<CheckCircleIcon sx={{ fontSize: 24 }} />}
           sx={{
             color: "primary.main",
             "&.Mui-checked": {
@@ -84,6 +91,7 @@ export const TaskCard: FC<ITaskCard> = ({
           onChange={(e) => onCheckboxChange(_id, e.target.checked)}
         />
       </Box>
+
       <Typography
         variant="body2"
         color="#9F9F9F"
@@ -107,7 +115,6 @@ export const TaskCard: FC<ITaskCard> = ({
         >
           {dateLabel}
         </Typography>
-
         <Typography
           variant="body2"
           color="#BFBFBF"
