@@ -1,9 +1,9 @@
-import ClientLayout from './ClientLayout';
+import ClientLayout from "./ClientLayout";
 
 export const metadata = {
-  title: 'Your App Name',
-  description: 'Your app description',
-  viewport: 'width=device-width, initial-scale=1',
+  title: "ToDo app",
+  description: "ToDo List",
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
